@@ -1,0 +1,9 @@
+table {
+    width: 80%;
+    margin: 20px;
+}
+
+::ng-deep .customize {
+    min-width: 15rem  !important;
+    max-height: 10rem  !important;
+  }

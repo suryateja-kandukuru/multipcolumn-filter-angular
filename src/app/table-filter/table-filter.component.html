@@ -1,0 +1,80 @@
+<div class='row' [ngSwitch]="filterType">
+  <!--==================== Input Case ===================-->
+  <div *ngSwitchCase="'input'">
+    <h2>Input filter</h2>
+    <mat-form-field appearance="outline" color="primary">
+      <mat-label>Favorite food</mat-label>
+      <input matInput (click)="$event.stopPropagation();" [value]="input_value" #inp (input)="change($event)" />
+    </mat-form-field>
+  </div>
+
+  <!--==================== Dropdown Case ===================-->
+  <div *ngSwitchCase="'dropdown'" >
+    <mat-form-field appearance="outline" color="primary">
+      <mat-label>Filter Selection</mat-label>
+      <input matInput  (input)="filterDropdown($event)"  (click)="$event.stopPropagation()" />
+    </mat-form-field>
+    <mat-checkbox class="example-margin" (click)="$event.stopPropagation()"
+                  [checked]="dropdownFilterCheck"
+                  color="primary"
+                  (change)="setAll($event.checked)">
+    </mat-checkbox>
+    <!-- <mat-checkbox class="example-margin"
+    [checked]="allComplete"
+    [color]="task.color"
+    [indeterminate]="someComplete()"
+    (change)="setAll($event.checked)">
+{{task.name}}
+</mat-checkbox> -->
+    <mat-selection-list #selectionList  (selectionChange)="onSelectionChange($event)">
+      <!-- <mat-list-option [selected]="firstOptionChecked" (click)="$event.stopPropagation()">
+        
+      </mat-list-option> -->
+      <mat-list-option *ngFor="let topping of dropDownFil; let i = index" color="primary"
+        [selected]="topping.checked" [value]="topping" (click)="$event.stopPropagation()">
+        <span>
+          {{ topping.value }}
+        </span>
+      </mat-list-option>
+    </mat-selection-list>
+  </div>
+
+  <!--==================== Dropdown Case ===================-->
+  <div *ngSwitchCase="'date'">
+    <mat-form-field appearance="outline" color="primary" (click)="$event.stopPropagation();">
+      <mat-label>Select Date Range Type</mat-label>
+      <mat-select (selectionChange)="onDateSelection($event)" [value]="selectedDateType">
+        <mat-option color="primary"
+        *ngFor="let type of dateTypes" [value]="type">
+          {{type}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+          <!--==================== Range Date picker  ===================-->
+
+    <mat-form-field appearance="outline" (click)="$event.stopPropagation();" *ngIf="selectedDateType === 'Date Range'">
+      <mat-label>Enter a date range</mat-label>
+      <mat-date-range-input [rangePicker]="picker" >
+        <input matStartDate placeholder="Start date" [value]="minDateSelected" (dateChange)="onStartRangeDateSelected($event)">
+        <input matEndDate placeholder="End date" [value]="maxDateSelected" (dateChange)="onEndRangeDateSelected($event)">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker color="primary" #picker #rangePicker></mat-date-range-picker>
+    </mat-form-field>
+
+    <!--==================== Single Date picker  ===================-->
+    <mat-form-field color="primary" appearance="outline" (click)="$event.stopPropagation();"
+      *ngIf="!(selectedDateType === 'Date Range') && !(selectedDateType === '')">
+      <mat-label>Custom calendar color</mat-label>
+      <input matInput [matDatepicker]="picker2" [value]="singleDateSelected" (dateChange)="onSingleDateSelected($event)">
+      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+      <mat-datepicker #picker2 color="primary"></mat-datepicker>
+    </mat-form-field>
+  </div>
+  <div>
+  <!--==================== Action Buttons ===================-->
+    <button mat-stroked-button (click)="clearColumn()">Clear</button>
+    <button mat-stroked-button (click)="applyFilter()">Apply</button>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+<button mat-raised-button color="primary" (click)="clearAll()">Clear All</button>
+
+<table mat-table matSort [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
+  <ng-container matColumnDef="{{column.key}}" *ngFor="let column of columnConfig">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column.header}}
+      <mat-icon aria-hidden="false" aria-label="Example home icon" (click)="filterTable(column.key)"
+        (click)="$event.stopPropagation();" [matMenuTriggerFor]="menu">filter_alt</mat-icon>
+    </th>
+    <td mat-cell *matCellDef="let element">
+      <span *ngIf="column.key === 'fileName'" (click)="$event.stopPropagation(); onFileClick(element[column.key])">
+        <span class="file-selection pointer">
+          {{ element[column.key] }}
+        </span>
+      </span>
+      <span *ngIf="column.key !== 'fileName'" [ngStyle]="{
+        color:
+          element[column.key] === 'Processing'
+            ? 'orange'
+            : element[column.key] === 'Need Attention'
+            ? '#ff0000'
+            : element[column.key] === 'Completed'
+            ? '#4ad44a'
+            : ''
+      }">
+        {{ element[column.key] }}
+      </span>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayColumns; sticky: true"></tr>
+  <tr mat-row *matRowDef="let element; columns: displayColumns" class="table-element-row"></tr>
+</table>
+
+  <mat-menu #menu="matMenu" class="customize" (click)="$event.stopPropagation()">
+    <app-table-filter *ngIf="filterApplied" #tableFilter
+    [filterType]="filterType"
+    [filterColumn]="filterColumn"
+    [tableData]="tableData"
+    [rows]="rows"
+    [filterApplied]="filterApplied"
+    [filterObj]="filterObj"
+    (filterOuputData)="getFilteredData($event)"
+    (filterObjEmit)="filterObjEmit($event)"></app-table-filter>
+  </mat-menu>
